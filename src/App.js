@@ -11,7 +11,8 @@ function App() {
    */
 
   const fakeFetcher = (inputValue) => {
-    if(inputValue) console.log(`The value to fetch is ${inputValue}`)
+    const conditions = [0, "", null, undefined];
+    if(!conditions.includes(inputValue.trim())) console.log(`The value to fetch is ${inputValue}`)
   }
   
   
