@@ -34,7 +34,7 @@ const App = () => {
   
   return (
 
-    <div>
+    <div className='App'>
       <div>
         <h2>Debounce Input Uncontrolled</h2>
         <p>Will output to the console the value to be fetched using a custom function</p>
@@ -46,12 +46,12 @@ const App = () => {
         <input type="text" value={debounceTermControlled} onChange={(e) => setDebounceTermControlled(e.target.value)}/>
       </div>
       <div>
-        <h2>Debounce Input using Lodash</h2>
+        <h2>Debounce Input Controlled using Lodash</h2>
         <p>Will output to the console the value to be fetched using the js library Lodash</p>
         <input type="text" value={debounceLodashValue} onChange={onDebounceLodash}/>
       </div>
       <div>
-        <h2>Throttle Input</h2>
+        <h2>Throttle Input Controlled</h2>
         <input type="text" value={throttleInput} onChange={(e) => setThrottleInput(e.target.value)}/>
       </div>
     </div>
