@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './App.css';
-import { useState } from "react";
 import { useDebounce } from "./hooks/useDebounce";
 import { debouncer, fakeFetcher } from './utils/utils';
+import { debounce } from "lodash"
 
 const App = () => {
 
@@ -10,9 +10,27 @@ const App = () => {
   const [debounceTermControlled, setDebounceTermControlled] = useState(""); // Original input value
   const debouncedValue = useDebounce(debounceTermControlled, 1000); // Search term after delay
 
+  const [debounceLodashValue, setDebounceLodashValue] = useState("");
+  const delayedQuery = useCallback(debounce(value => fakeFetcher(value), 500), []) // Necessary to use useCallback here to prevent that the function is destroyed on rerendering 
+
+  /**
+   * Effect to run for the controlled input with a custom hook
+   */
   useEffect(() => {
     fakeFetcher(debouncedValue)
   }, [debouncedValue])
+
+
+  /**
+   * Function running for the onChange event
+   * @param {object} e 
+   */
+  const onDebounceLodash = (e) => {
+    const { value } = e.target
+    setDebounceLodashValue(value)
+    delayedQuery(value)
+  }
+
   
   return (
 
@@ -26,6 +44,11 @@ const App = () => {
         <h2>Debounce Input Controlled</h2>
         <p>Will output to the console the value to be fetched using a custom hook</p>
         <input type="text" value={debounceTermControlled} onChange={(e) => setDebounceTermControlled(e.target.value)}/>
+      </div>
+      <div>
+        <h2>Debounce Input using Lodash</h2>
+        <p>Will output to the console the value to be fetched using the js library Lodash</p>
+        <input type="text" value={debounceLodashValue} onChange={onDebounceLodash}/>
       </div>
       <div>
         <h2>Throttle Input</h2>
