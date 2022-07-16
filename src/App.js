@@ -1,45 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { useState } from "react";
+import { useDebounce } from "./hooks/useDebounce";
+import { debouncer, fakeFetcher } from './utils/utils';
 
-function App() {
+const App = () => {
 
   const [throttleInput, setThrottleInput] = useState("");
+  const [debounceTermControlled, setDebounceTermControlled] = useState(""); // Original input value
+  const debouncedValue = useDebounce(debounceTermControlled, 1000); // Search term after delay
 
-  /**
-   * Setting up a fake fetch function that simuates getting some data from an API 4ex
-   */
-
-  const fakeFetcher = (inputValue) => {
-    const conditions = [0, "", null, undefined];
-    if(!conditions.includes(inputValue.trim())) console.log(`The value to fetch is ${inputValue}`)
-  }
+  useEffect(() => {
+    fakeFetcher(debouncedValue)
+  }, [debouncedValue])
   
-  
-  /**
-   * Debounce input should wait for X seconds before it fetches the data
-   * While its fetching it should not make more requests
-   * This is useful for spamming reasons (4ex spamming an endpoint that should not handle multiple requests in seconds)  
-   */
-
-  const debouncer = (dataFetcher, time) => {
-    let timer;
-    return (e) => {
-      const { value } = e.target
-      clearTimeout(timer);
-      timer = setTimeout(() => dataFetcher(value), time)
-    }
-
-  }
-
-
-
   return (
 
     <div>
       <div>
-        <h2>Debounce Input</h2>
+        <h2>Debounce Input Uncontrolled</h2>
+        <p>Will output to the console the value to be fetched using a custom function</p>
         <input type="text" onChange={debouncer(fakeFetcher, 1000)}/>
+      </div>
+      <div>
+        <h2>Debounce Input Controlled</h2>
+        <p>Will output to the console the value to be fetched using a custom hook</p>
+        <input type="text" value={debounceTermControlled} onChange={(e) => setDebounceTermControlled(e.target.value)}/>
       </div>
       <div>
         <h2>Throttle Input</h2>
