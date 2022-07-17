@@ -1,7 +1,7 @@
  /**
-   * Setting up a fake fetch function that simuates getting some data from an API 4ex
-   * @param inputValue
-   */
+  * Setting up a fake fetch function that simuates getting some data from an API 4ex
+  * @param inputValue
+  */
 
   const fakeFetcher = (inputValue) => {
     const conditions = [0, "", null, undefined];
@@ -24,10 +24,24 @@
     return (e) => {
       const { value } = e.target
       clearTimeout(timer);
-      timer = setTimeout(() => dataFetcher(value), delay)
+      timer = setTimeout(() => dataFetcher(value), delay || 500)
     }
 
   }
 
+  const throttle = (dataFetcher, delay) => {
+    let isThrottling = false;
+    return (e) => {
+      if(!isThrottling) {
+        isThrottling = true;
+        const { value } = e.target
+        dataFetcher(value)
+        setTimeout(() => isThrottling = false , delay || 500)
+      }
+    }
+  }
 
-  export { fakeFetcher, debouncer }
+
+  
+
+  export { fakeFetcher, debouncer, throttle }
