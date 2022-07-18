@@ -29,6 +29,14 @@
 
   }
 
+  /**
+   * Throttling custom function that uses a controlled variable to indicate if it is or not in throttling mode
+   * Creates a limit for the number off calls that can be made in a defined time
+   * @param { function } dataFetcher - Function responsible for the request
+   * @param { number } delay - Number of milliseconds to delay
+   * @returns Function to be consumed in the onChange method
+   */
+
   const throttler = (dataFetcher, delay) => {
     let isThrottling = false;
     return (e) => {
