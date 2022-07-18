@@ -14,7 +14,7 @@ const App = () => {
   const delayedDebounce = useMemo(() => debounce(value => fakeFetcher(value), 500), []) // Necessary to use useMemo here to prevent the function from being destroyed on rerendering 
 
   const [throttleInputControlled, setThrottleInputControlled] = useState("");
-  const [throttleFn, isThrottling] = useThrottle(fakeFetcher, 1000);
+  const throttleFn = useThrottle(fakeFetcher, 1000);
 
   const [throttleInputLodash, setThrottleInputLodash] = useState("");
   const delayedThrottle = useMemo(() => throttle(value => fakeFetcher(value), 1000), []) // useMemo again for the same reason off the debounce case
