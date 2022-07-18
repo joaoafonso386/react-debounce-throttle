@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import './App.css';
 import { useDebounce } from "./hooks/useDebounce";
 import { useThrottle } from './hooks/useThrottle';
@@ -8,7 +8,7 @@ import { debounce, throttle} from "lodash"
 const App = () => {
 
   const [debounceTermControlled, setDebounceTermControlled] = useState(""); // Original input value
-  const debouncedValue = useDebounce(debounceTermControlled, 1000); // Search term after delay
+  const debouncedValue = useDebounce(debounceTermControlled, 1000); // Return the search term after delay
 
   const [debounceLodashValue, setDebounceLodashValue] = useState("");
   const delayedDebounce = useMemo(() => debounce(value => fakeFetcher(value), 500), []) // Necessary to use useMemo here to prevent the function from being destroyed on rerendering 
@@ -27,15 +27,7 @@ const App = () => {
   }, [debouncedValue])
 
   /**
-   * Effect to run for the controlled input with a custom hook (throttle)
-   */
-  // useEffect(() => {
-  //   fakeFetcher(throttledValue)
-  // }, [throttledValue])
-
-
-  /**
-   * Function running for the onChange event
+   * Function running for the onChange event (debounce)
    * @param {object} e 
    */
   const onDebounceLodash = (e) => {
@@ -44,6 +36,10 @@ const App = () => {
     delayedDebounce(value)
   }
 
+  /**
+   * Function running for the onChange event (throttle)
+   * @param {object} e 
+   */
   const onThrottleLodash = (e) => {
     const { value } = e.target
     setThrottleInputLodash(value)

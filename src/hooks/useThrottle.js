@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react";
 
-export const useThrottle = (dataFetcher, delay, deps = []) => {
+
+export const useThrottle = (dataFetcher, delay, dependencies = []) => {
 
   const lastRan = useRef(Date.now());
   
@@ -16,6 +17,6 @@ export const useThrottle = (dataFetcher, delay, deps = []) => {
       clearTimeout(handler);
     };
   },
-  [delay, ...deps])
+  [delay, ...dependencies, dataFetcher])
 
 }
