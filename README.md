@@ -8,6 +8,6 @@
   - Create a limit for the number of times a function can be called in a certain amount of time. This is also a good technique to not spam API's
   - In throttling the function will run at the BEGINNING and the will continue to run based on the delay/time that you apply for throttling (will run like an interval)
 
-# Six different implementations for throttling and debouncing values
+### Six different implementations for throttling and debouncing values
 
 *Both techniques are useful to understand in a deeper way how react renders things and how you can cash values using react tools (useRef, useMemo or useCallback)*
