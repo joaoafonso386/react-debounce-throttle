@@ -12,12 +12,12 @@ const App = () => {
 
   const [debounceLodashValue, setDebounceLodashValue] = useState("");
   const delayedDebounce = useMemo(() => debounce(value => fakeFetcher(value), 500), []) // Necessary to use useMemo here to prevent the function from being destroyed on rerendering 
-  const delayedThrottle = useMemo(() => throttle(value => fakeFetcher(value), 1000), []) // Necessary to use useMemo here to prevent the function from being destroyed on rerendering 
-  
 
   const [throttleInputControlled, setThrottleInputControlled] = useState("");
-  const throttledValue = useThrottle(throttleInputControlled, 500)
+  const throttledValue = useThrottle(throttleInputControlled, 500);
+
   const [throttleInputLodash, setThrottleInputLodash] = useState("");
+  const delayedThrottle = useMemo(() => throttle(value => fakeFetcher(value), 1000), []) // useMemo again for the same reason off the debounce case
 
   /**
    * Effect to run for the controlled input with a custom hook (debounce)
@@ -71,6 +71,7 @@ const App = () => {
       </div>
       <div>
         <h2>Throttle Input Uncontrolled</h2>
+        <p>Will output to the console the value to be fetched using a custom function</p>
         <input type="text" onChange={throttler(fakeFetcher, 1000)}/>
       </div>
       <div>
@@ -79,6 +80,7 @@ const App = () => {
       </div>
       <div>
         <h2>Throttle Input Controlled using Lodash</h2>
+        <p>Will output to the console the value to be fetched using the js library Lodash</p>
         <input type="text" value={throttleInputLodash} onChange={onThrottleLodash}/>
       </div>
     </div>
