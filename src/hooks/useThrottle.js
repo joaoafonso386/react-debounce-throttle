@@ -1,22 +1,32 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo, useState, useCallback } from "react";
 
 
-export const useThrottle = (dataFetcher, delay, dependencies = []) => {
+export const useThrottle = (dataFetcher, delay) => {
 
-  const lastRan = useRef(Date.now());
-  
+  const [isThrottling, setIsThrottling] = useState(true);
+  const timerRef = useRef(undefined);
+
+  const throttledFn = useCallback((...args) => {
+
+    if (!isThrottling) return
+
+    setIsThrottling(false);
+    dataFetcher(...args);
+
+  },[isThrottling, dataFetcher]);
+
   useEffect(() => {
-    const handler = setTimeout(() => {
-      if (Date.now() - lastRan.current >= delay) {
-        dataFetcher();
-        lastRan.current = Date.now();
-      }
-    }, delay - (Date.now() - lastRan.current));
 
-    return () => {
-      clearTimeout(handler);
-    };
-  },
-  [delay, ...dependencies, dataFetcher])
+    if (!isThrottling) {
+      timerRef.current = window.setTimeout(() => {
+        setIsThrottling(true);
+      }, delay);
+
+      return () => window.clearTimeout(timerRef.current);
+    }
+
+  }, [isThrottling, delay]);
+
+  return [throttledFn, isThrottling];
 
 }
