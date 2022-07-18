@@ -10,9 +10,9 @@ export const useThrottle = (value, delay) => {
 
     if(!isThrottling) {
       isThrottling.current = true
+      setTerm(value)
       timer = setTimeout(() => { 
         isThrottling.current = false
-        setTerm(value)
       }, delay || 500)
     }
 

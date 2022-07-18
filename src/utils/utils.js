@@ -29,7 +29,7 @@
 
   }
 
-  const throttle = (dataFetcher, delay) => {
+  const throttler = (dataFetcher, delay) => {
     let isThrottling = false;
     return (e) => {
       if(!isThrottling) {
@@ -44,4 +44,4 @@
 
   
 
-  export { fakeFetcher, debouncer, throttle }
+  export { fakeFetcher, debouncer, throttler }
