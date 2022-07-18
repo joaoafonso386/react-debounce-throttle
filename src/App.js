@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import './App.css';
 import { useDebounce } from "./hooks/useDebounce";
 import { useThrottle } from './hooks/useThrottle';
 import { debouncer, fakeFetcher, throttler } from './utils/utils';
-import { debounce, throttle } from "lodash"
+import { debounce, throttle} from "lodash"
 
 const App = () => {
 
@@ -14,7 +14,7 @@ const App = () => {
   const delayedDebounce = useMemo(() => debounce(value => fakeFetcher(value), 500), []) // Necessary to use useMemo here to prevent the function from being destroyed on rerendering 
 
   const [throttleInputControlled, setThrottleInputControlled] = useState("");
-  const throttledValue = useThrottle(throttleInputControlled, 500);
+  useThrottle(() => fakeFetcher(throttleInputControlled), 1000, [throttleInputControlled]);
 
   const [throttleInputLodash, setThrottleInputLodash] = useState("");
   const delayedThrottle = useMemo(() => throttle(value => fakeFetcher(value), 1000), []) // useMemo again for the same reason off the debounce case
@@ -29,9 +29,9 @@ const App = () => {
   /**
    * Effect to run for the controlled input with a custom hook (throttle)
    */
-  useEffect(() => {
-    fakeFetcher(throttledValue)
-  }, [throttledValue])
+  // useEffect(() => {
+  //   fakeFetcher(throttledValue)
+  // }, [throttledValue])
 
 
   /**

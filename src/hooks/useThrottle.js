@@ -1,27 +1,21 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 
-export const useThrottle = (value, delay) => {
+export const useThrottle = (dataFetcher, delay, deps = []) => {
 
-  const isThrottling = useRef(false);
-  const [term, setTerm] = useState(value);
+  const lastRan = useRef(Date.now());
   
   useEffect(() => {
-    let timer;
-
-    if(!isThrottling) {
-      isThrottling.current = true
-      setTerm(value)
-      timer = setTimeout(() => { 
-        isThrottling.current = false
-      }, delay || 500)
-    }
+    const handler = setTimeout(() => {
+      if (Date.now() - lastRan.current >= delay) {
+        dataFetcher();
+        lastRan.current = Date.now();
+      }
+    }, delay - (Date.now() - lastRan.current));
 
     return () => {
-      clearInterval(timer)
-    }
-
-  }, [isThrottling, delay, value])
-
-  return term
+      clearTimeout(handler);
+    };
+  },
+  [delay, ...deps])
 
 }
