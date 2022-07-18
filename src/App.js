@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import './App.css';
 import { useDebounce } from "./hooks/useDebounce";
+import { useThrottle } from './hooks/useThrottle';
 import { debouncer, fakeFetcher, throttle } from './utils/utils';
 import { debounce } from "lodash"
 
@@ -10,16 +11,26 @@ const App = () => {
   const debouncedValue = useDebounce(debounceTermControlled, 1000); // Search term after delay
 
   const [debounceLodashValue, setDebounceLodashValue] = useState("");
-  const delayedQuery = useMemo(() => debounce(value => fakeFetcher(value), 500), []) // Necessary to use useMemo here to prevent the function from being destroyed on rerendering 
+  const delayedDebounce = useMemo(() => debounce(value => fakeFetcher(value), 500), []) // Necessary to use useMemo here to prevent the function from being destroyed on rerendering 
+  
 
-  const [throttleInput, setThrottleInput] = useState("");
+  const [throttleInputControlled, setThrottleInputControlled] = useState("");
+  const throttledValue = useThrottle(throttleInputControlled, 500)
+  const [throttleInputLodash, setThrottleInputLodash] = useState("");
 
   /**
-   * Effect to run for the controlled input with a custom hook
+   * Effect to run for the controlled input with a custom hook (debounce)
    */
   useEffect(() => {
     fakeFetcher(debouncedValue)
   }, [debouncedValue])
+
+  /**
+   * Effect to run for the controlled input with a custom hook (throttle)
+   */
+  useEffect(() => {
+    fakeFetcher(throttledValue)
+  }, [throttledValue])
 
 
   /**
@@ -29,7 +40,11 @@ const App = () => {
   const onDebounceLodash = (e) => {
     const { value } = e.target
     setDebounceLodashValue(value)
-    delayedQuery(value)
+    delayedDebounce(value)
+  }
+
+  const onThrottleControled = (e) => {
+    setThrottleInputControlled(e.target.value)
   }
 
   
@@ -57,11 +72,11 @@ const App = () => {
       </div>
       <div>
         <h2>Throttle Input Controlled</h2>
-        <input type="text" value={throttleInput} onChange={(e) => setThrottleInput(e.target.value)}/>
+        <input type="text" value={throttleInputControlled} onChange={onThrottleControled}/>
       </div>
       <div>
         <h2>Throttle Input Controlled using Lodash</h2>
-        <input type="text" value={throttleInput} onChange={(e) => setThrottleInput(e.target.value)}/>
+        <input type="text" value={throttleInputLodash} onChange={(e) => setThrottleInputLodash(e.target.value)}/>
       </div>
     </div>
     
